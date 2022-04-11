@@ -65,15 +65,15 @@ public class FrmManteProd extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
 
 		JButton btnNewButton = new JButton("Registrar");
+		btnNewButton.setBounds(322, 10, 89, 23);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				registrar();
 			}
 		});
-		btnNewButton.setBounds(324, 29, 89, 23);
+		contentPane.setLayout(null);
 		contentPane.add(btnNewButton);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -84,12 +84,12 @@ public class FrmManteProd extends JFrame {
 		scrollPane.setViewportView(txtSalida);
 
 		JButton btnListado = new JButton("Listado");
+		btnListado.setBounds(177, 322, 89, 23);
 		btnListado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				listado();
 			}
 		});
-		btnListado.setBounds(177, 322, 89, 23);
 		contentPane.add(btnListado);
 
 		txtCódigo = new JTextField();
@@ -114,8 +114,8 @@ public class FrmManteProd extends JFrame {
 		contentPane.add(lblNomProducto);
 
 		txtDescripcion = new JTextField();
-		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(122, 42, 144, 20);
+		txtDescripcion.setColumns(10);
 		contentPane.add(txtDescripcion);
 
 		JLabel lblStock = new JLabel("Stock:");
@@ -123,8 +123,8 @@ public class FrmManteProd extends JFrame {
 		contentPane.add(lblStock);
 
 		txtStock = new JTextField();
-		txtStock.setColumns(10);
 		txtStock.setBounds(122, 103, 77, 20);
+		txtStock.setColumns(10);
 		contentPane.add(txtStock);
 
 		JLabel lblPrecio = new JLabel("Precio:");
@@ -132,8 +132,8 @@ public class FrmManteProd extends JFrame {
 		contentPane.add(lblPrecio);
 
 		txtPrecio = new JTextField();
-		txtPrecio.setColumns(10);
 		txtPrecio.setBounds(122, 131, 77, 20);
+		txtPrecio.setColumns(10);
 		contentPane.add(txtPrecio);
 
 		
@@ -145,9 +145,39 @@ public class FrmManteProd extends JFrame {
 		cboProveedores.setBounds(310, 106, 86, 22);
 		contentPane.add(cboProveedores);
 		
+		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buscarProducto();
+			}
+		});
+		btnBuscar.setBounds(322, 52, 89, 23);
+		contentPane.add(btnBuscar);
+		
 		llenaCombo();
 	}
 
+	void buscarProducto(){
+		EntityManagerFactory fabrica = Persistence.createEntityManagerFactory("mysql");
+		// 2. crea el manejador de entidades
+		EntityManager em = fabrica.createEntityManager();
+		// 3. empezar mi transacción -->En busqueda-->
+		//select...where id...
+		Producto p=em.find(Producto.class,txtCódigo.getText());
+		//devuelve un obj de Entidad si encuentra el Id,sino devuelve null
+		
+		if(p==null)
+			txtSalida.setText("Codigo no existe");
+		else
+			txtDescripcion.setText(p.getDescripcion());
+			
+			
+		
+		//Cierre
+		em.close();
+		
+	}
+	
 	void llenaCombo() {
 		
 		EntityManagerFactory fabrica = Persistence.createEntityManagerFactory("mysql");
